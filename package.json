@@ -9,7 +9,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "babel-node": "babel-node",
-    "node": "nodemon --exec npm run babel-node"
+    "babel": "babel -s",
+    "node": "nodemon --exec npm run babel-node",
+    "build": "babel app.js -o ./build/app.js -s"
   },
   "author": "",
   "license": "ISC",
