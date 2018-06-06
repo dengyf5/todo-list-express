@@ -1,6 +1,4 @@
-import mongoose, {
-    mongo
-} from 'mongoose'
+import mongoose from 'mongoose'
 import config from '../config'
 
 mongoose.connect(config.uri)
@@ -23,7 +21,9 @@ const reconnect = ((n) => {
 
     }
 })(5)
-// connect ready state
+
+// listen on connect ready state
+// connecting -- connected -- disconnected -- error
 db.on('connecting', () => {
     console.log(`connecting to database ......`)
 })
@@ -34,6 +34,7 @@ db.on('connected', () => {
 
 db.on('disconnected', () => {
     console.log(`disconnected, trying to reconnect .......`)
+    mongoose.disconnect()
     setTimeout(reconnect, 3000)
 
 })
