@@ -1,5 +1,7 @@
 import Todo from '../models/todo/todo'
-import mongoose from "mongoose";
+import mongoose from 'mongoose'
+import db from '../models/db'
+
 
 class Todos {
     constructor() {
@@ -15,11 +17,6 @@ class Todos {
     }) {
         const todo = Todo(item);
         todo.save(err => callback(err));
-        //mongoose.disconnect();
-    }
-
-    connect(url, opts) {
-        mongoose.connect(url, opts);
     }
 }
 
