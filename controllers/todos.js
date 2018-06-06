@@ -3,20 +3,35 @@ import mongoose from 'mongoose'
 import db from '../models/db'
 
 
+
 class Todos {
     constructor() {
-        this.add = this.add.bind(this);
+        this.add = this.add.bind(this)
     }
 
-    add(item, callback = (err) => {
-        if (err) {
-            throw err;
-        } else {
-            console.log('Success!');
-        }
-    }) {
-        const todo = Todo(item);
-        todo.save(err => callback(err));
+
+    /**
+     * add some item to the database
+     * and return a promise
+     * @param {*} item
+     * @returns Promise
+     * @memberof Todos
+     */
+    add(item) {
+        return new Promise((resolve, rejects) => {
+            const todo = Todo(item)
+            todo.save(err => {
+                if (err) {
+                    rejects(err)
+                } else {
+                    resolve()
+                }
+            })
+        })
+    }
+
+    find(item, callback = () => {}) {
+
     }
 }
 

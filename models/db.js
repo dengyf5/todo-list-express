@@ -17,6 +17,7 @@ const reconnect = ((n) => {
         } else {
             mongoose.disconnect()
             console.log(`disconnect from database!`)
+            i = 0;
         }
 
     }

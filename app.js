@@ -1,14 +1,33 @@
 import todos from "./controllers/todos";
+import express from 'express'
 
-let data = {
-    item: 'Go shopping',
-    tag: 'life',
-    description: 'buy some tissue and some food!', 
-    userId: 233,
-    level: 99988888888888,
-    finishedTime: new Date('2018-08-08'),
-    createTime: new Date(),
-};
+const app = express();
 
-todos.add(data);
-setTimeout(() => todos.add(data),5000)
+app.post('/', (req, res) => {
+    let data = ''
+    req.on('data', chunks => {
+        data += chunks;
+    })
+    req.on('end', () => {
+        todos.add(Object.assign({}, JSON.parse(data.toString('utf8')), {createTime: new Date()}))
+            .then(() => {
+                console.log('success!')
+                res.json({
+                    type: 'SUCCESS',
+                    result: 'SUCCESS'
+                });
+            })
+            .catch(
+                err => {
+                    console.log('error')
+                    res.json({
+                        type: 'ERROR_FORMAT',
+                        result: 'FAILURE'
+                    })
+                }
+            )
+    })
+})
+
+app.listen(8888)
+console.log(`listening on localhost:8888`)
