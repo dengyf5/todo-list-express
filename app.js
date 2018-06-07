@@ -1,33 +1,18 @@
-import todos from "./controllers/todos";
-import express from 'express'
+import Item from './controllers/item'
+import db from './models/db'
+import Todo from './models/todo/todo'
 
-const app = express();
+let data = {
+    id: 666233,
+    item: 'shopping',
+    tag: 'life',
+    description: 'normal',
+    userId: 233,
+    level: 0,
+    finishedTime: new Date(),
+    createTime: new Date(),
+}
 
-app.post('/', (req, res) => {
-    let data = ''
-    req.on('data', chunks => {
-        data += chunks;
-    })
-    req.on('end', () => {
-        todos.add(Object.assign({}, JSON.parse(data.toString('utf8')), {createTime: new Date()}))
-            .then(() => {
-                console.log('success!')
-                res.json({
-                    type: 'SUCCESS',
-                    result: 'SUCCESS'
-                });
-            })
-            .catch(
-                err => {
-                    console.log('error')
-                    res.json({
-                        type: 'ERROR_FORMAT',
-                        result: 'FAILURE'
-                    })
-                }
-            )
-    })
-})
+let item = new Item(Todo,data);
 
-app.listen(8888)
-console.log(`listening on localhost:8888`)
+item.add().then(() => console.log(`success`)).catch(err => console.log(`${err}`))

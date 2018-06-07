@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 
 const todoSchema = new Schema({
+    id: Number,
     item: String,
     tag: String,
     description: String, 
@@ -13,7 +14,7 @@ const todoSchema = new Schema({
 });
 
 
-const Todo = mongoose.model('todos',todoSchema);
+const Todo = mongoose.model('todolist',todoSchema);
 
 
 export default Todo;
