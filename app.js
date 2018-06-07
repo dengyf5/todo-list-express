@@ -3,9 +3,8 @@ import db from './models/db'
 import Todo from './models/todo/todo'
 
 let data = {
-    id: 666233,
     item: 'shopping',
-    tag: 'life',
+    tag: 'work',
     description: 'normal',
     userId: 233,
     level: 0,
@@ -14,5 +13,7 @@ let data = {
 }
 
 let item = new Item(Todo,data);
+//item.emply().then(() => console.log(`emply`))
+//item.add().then(() => console.log(`success`)).catch(err =>console.log( `${err}`))
 
-item.add().then(() => console.log(`success`)).catch(err => console.log(`${err}`))
+item.setSort('id',3).getByProp('id').then((data) => console.log(`data:${data}`)).catch(err => console.log(`Error:${err}`))
