@@ -27,9 +27,10 @@ class Item {
         this.del = this.delete = this.delete.bind(this)
         this.deleteByPattern = this.deleteByPattern.bind(this)
         this.deletes = this.deletes.bind(this)
-        this.deletesByPattern = this.deletesByPattern(this)
+        this.deletesByPattern = this.deletesByPattern.bind(this)
+        this.deletesByProp = this.deletesByProp.bind(this)
         this.get = this.get.bind(this)
-        this.getsByProp = this.getByProp.bind(this)
+        this.getsByProp = this.getsByProp.bind(this)
         this.getByPattern = this.getByPattern.bind(this)
         this.gets = this.gets.bind(this)
         this.getsByPattern = this.getsByPattern.bind(this)
@@ -140,7 +141,22 @@ class Item {
      * @memberof Item
      */
     deletes(...ids) {
-        return this.model.deleteMany().where('id').in(ids).exec();
+        return this.model.deleteMany().where('id').in(ids).exec()
+    }
+
+    /**
+     * delete items by prop and its value
+     *
+     * @param {string} prop
+     * @param {string | number} value
+     * @returns {promise}
+     * @memberof Item
+     */
+    deletesByProp(prop,value) {
+        if(!(prop && value)) {
+            throw new Error(`need prop value`)
+        }
+        return this.deletesByPattern({[prop]: value})
     }
 
     /**
