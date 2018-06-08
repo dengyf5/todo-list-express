@@ -8,23 +8,26 @@
  */
 class Item {
     constructor(model, data) {
+        // if model is not definded, throw a error
         if (!model) {
             throw new Error(`require a model param`)
         }
-        this.model = model;
 
+        // initial this.model
+        this.model = model;
+        // initial the way to sort
         this.sort = {
             id: 1
         }
 
-        //bind this
+        // bind methods with `this`
         this.save = this.add = this.add.bind(this)
         this.del = this.delete = this.delete.bind(this)
         this.deleteByPattern = this.deleteByPattern.bind(this)
         this.deletes = this.deletes.bind(this)
         this.deletesByPattern = this.deletesByPattern(this)
         this.get = this.get.bind(this)
-        this.getByProp = this.getByProp.bind(this)
+        this.getsByProp = this.getByProp.bind(this)
         this.getByPattern = this.getByPattern.bind(this)
         this.gets = this.gets.bind(this)
         this.getsByPattern = this.getsByPattern.bind(this)
@@ -35,13 +38,22 @@ class Item {
         this.setId = this.setId.bind(this)
         this.getLastId = this.getLastId.bind(this)
 
-        //set item
+        // initial this.item
         if (data) {
             this.data = data
             this.item = this.model(data)
         }
     }
 
+    /**
+     * change the way to sort
+     * 
+     *
+     * @param {string} prop
+     * @param {number} [sort=1]
+     * @returns {class} Item(this)
+     * @memberof Item
+     */
     setSort(prop, sort = 1) {
         if (typeof sort === typeof 1) {
             sort = sort >= 0 ? 1 : -1;
@@ -52,6 +64,13 @@ class Item {
         return this;
     }
 
+    /**
+     * save a item to database
+     *
+     * @param {object data} [data=null]
+     * @returns {promise}
+     * @memberof Item
+     */
     async add(data = null) {
         if (!data && !this.data) {
             throw new Error(`you have not declare the data!`)
@@ -76,48 +95,124 @@ class Item {
 
     }
 
+    /**
+     * delete a item with mongo pattern
+     *
+     * @param {object} pattern
+     * @returns {promise}
+     * @memberof Item
+     */
     deleteByPattern(pattern) {
         return this.model.deleteOne(pattern).exec()
     }
 
+    /**
+     * delete a item by item id
+     *
+     * @param {number} id
+     * @returns {promise}
+     * @memberof Item
+     */
     delete(id) {
         return this.model.deleteOne({
             id
         }).exec()
     }
 
+    /**
+     * delete items by pattern
+     *
+     * @param {object} pattern
+     * @returns {promise}
+     * @memberof Item
+     */
     deletesByPattern(pattern) {
         return this.model.deleteMany(pattern).exec();
     }
 
+    /**
+     * delelte items by item id
+     *
+     * @param {...number} ids
+     * @returns {promise}
+     * @memberof Item
+     */
     deletes(...ids) {
         return this.model.deleteMany().where('id').in(ids).exec();
     }
 
+    /**
+     * get a item by pattern
+     *
+     * @param {object} pattern
+     * @param {object} [sort=null]
+     * @returns {promise}
+     * @memberof Item
+     */
     getByPattern(pattern, sort = null) {
-        return this.model.find(pattern).sort(sort || this.sort).exec();
+        return this.model.findOne(pattern).sort(sort || this.sort).exec();
     }
 
+    /**
+     * get a item by item id
+     * 
+     * @param {number} id
+     * @returns {promise}
+     * @memberof Item
+     */
     get(id) {
         return this.model.findOne({
             id
         }).exec();
     }
 
-    getByProp(prop, value, sort) {
+    /**
+     * get items by a prop and value
+     *
+     * @param {string} prop
+     * @param {string|number} value
+     * @param {object} sort
+     * @returns {promise}
+     * @memberof Item
+     */
+    getsByProp(prop, value, sort) {
         if (value) {
             return this.model.find().where(prop).equals(value).sort(sort || this.sort).exec()
         }
         return this.model.find().where(prop).sort(sort || this.sort).exec();
     }
+
+    /**
+     * get items by pattern
+     *
+     * @param {object} pattern
+     * @param {object} [sort=null]
+     * @returns {promise}
+     * @memberof Item
+     */
     getsByPattern(pattern, sort = null) {
         return this.model.find(pattern).sort(sort || this.sort).exec();
     }
 
+    /**
+     * get items by id
+     *
+     * @param {...number} ids
+     * @returns {promise}
+     * @memberof Item
+     */
     gets(...ids) {
         return this.model.find().where('id').in(ids).sort(this.sort).exec();
     }
 
+    /**
+     * update a item by its id
+     *
+     * @param {number} id
+     * @param {object} item
+     * @returns {promise}
+     * @memberof Item
+     */
     update(id, item) {
         return this.exist(id).then(isExisted => {
             if (!isExisted) {
@@ -130,6 +225,13 @@ class Item {
         })
     }
 
+    /**
+     * find whether a id existed
+     * resolve a {boolern} value
+     * @param {number} id
+     * @returns {promise}
+     * @memberof Item
+     */
     exist(id) {
         return this.get(id).then((data) => {
             if (data) {
@@ -139,22 +241,42 @@ class Item {
         })
     }
 
+    /**
+     * emply the collection
+     * only use by admin
+     *
+     * @returns {promise}
+     * @memberof Item
+     */
     emply() {
         return this.model.db.dropCollection(this.model.collection.collectionName)
     }
 
+    /**
+     * get the last id in the database
+     *
+     * @returns {promise}
+     * @memberof Item
+     */
     getLastId() {
         return this.model.find({}).sort({
             id: -1
         }).exec().then(datalist => {
             if (datalist.length === 0) {
-                return 0
+                // begin with 1000
+                return 999
             }
             //console.log(datalist[0].id)
             return datalist[0].id
         })
     }
 
+    /**
+     * set this.item with the last id
+     *
+     * @param {object} item
+     * @memberof Item
+     */
     async setId(item) {
         let id = await this.getLastId()
         item.id = +id + 1;
