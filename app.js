@@ -1,7 +1,21 @@
-import http from "http";
+import Item from './controllers/item'
+import db from './models/db'
+import Todo from './models/todo/todo'
 
+let data = {
+    item: 'homework11',
+    tag: 'life',
+    description: 'normal',
+    userId: 233,
+    level: 1,
+    finishedTime: new Date(),
+    createTime: new Date(),
+}
 
-http.createServer((req, res) => {
-    res.end('HelloWorld!')
-}).listen(8888);
-console.log('listening to 8888');
+let item = new Item(Todo,data);
+
+//item.sortBy('id').getsByProp('tag','work').then(data => console.log(data)).catch(err => console.log(`${err}`))
+
+//item.add().then(()=>console.log(`add success`)).catch(err => console.log(`${err}`))
+
+//item.deleteByPattern({tag:'life'}).then(() => console.log(`delete success!`)).catch(err => console.log(`${err}`));
