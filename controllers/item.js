@@ -1,4 +1,4 @@
-import { config } from "../config";
+import { config } from '../config'
 
 /**
  * return a document object 
@@ -16,7 +16,7 @@ class Item {
         }
 
         // initial this.model
-        this.model = model;
+        this.model = model
         // initial the way to sort
         this.sort = {
             id: 1
@@ -59,12 +59,12 @@ class Item {
      */
     setSort(prop, sort = 1) {
         if (typeof sort === typeof 1) {
-            sort = sort >= 0 ? 1 : -1;
+            sort = sort >= 0 ? 1 : -1
         }
         this.sort = {
             [prop]: sort
-        };
-        return this;
+        }
+        return this
     }
 
     /**
@@ -94,7 +94,7 @@ class Item {
                 throw new Error(`id:${this.item.id} has already existed`)
             }
             return this.item.save()
-        })
+        }).catch(err => [err])
 
     }
 
@@ -106,7 +106,7 @@ class Item {
      * @memberof Item
      */
     deleteByPattern(pattern) {
-        return this.model.deleteOne(pattern).exec()
+        return this.model.deleteOne(pattern).exec().then(res => [null,res]).catch(err => [err])
     }
 
     /**
@@ -119,7 +119,7 @@ class Item {
     delete(id) {
         return this.model.deleteOne({
             id
-        }).exec()
+        }).exec().then(res => [null,res]).catch(err => [err])
     }
 
     /**
@@ -130,7 +130,7 @@ class Item {
      * @memberof Item
      */
     deletesByPattern(pattern) {
-        return this.model.deleteMany(pattern).exec();
+        return this.model.deleteMany(pattern).exec().then(res => [null,res]).catch(err => [err])
     }
 
     /**
@@ -141,7 +141,7 @@ class Item {
      * @memberof Item
      */
     deletes(...ids) {
-        return this.model.deleteMany().where('id').in(ids).exec()
+        return this.model.deleteMany().where('id').in(ids).exec().then(res => [null,res]).catch(err => [err])
     }
 
     /**
@@ -168,7 +168,7 @@ class Item {
      * @memberof Item
      */
     getByPattern(pattern, sort = null) {
-        return this.model.findOne(pattern).sort(sort || this.sort).exec();
+        return this.model.findOne(pattern).sort(sort || this.sort).exec().then(res => [null,res]).catch(err => [err])
     }
 
     /**
@@ -181,7 +181,7 @@ class Item {
     get(id) {
         return this.model.findOne({
             id
-        }).exec();
+        }).exec().then(res => [null,res]).catch(err => [err])
     }
 
     /**
@@ -195,9 +195,9 @@ class Item {
      */
     getsByProp(prop, value, sort) {
         if (value) {
-            return this.model.find().where(prop).equals(value).sort(sort || this.sort).exec()
+            return this.model.find().where(prop).equals(value).sort(sort || this.sort).exec().then(res => [null,res]).catch(err => [err])
         }
-        return this.model.find().where(prop).sort(sort || this.sort).exec();
+        return this.model.find().where(prop).sort(sort || this.sort).exec().then(res => [null,res]).catch(err => [err])
     }
 
     /**
@@ -209,7 +209,7 @@ class Item {
      * @memberof Item
      */
     getsByPattern(pattern, sort = null) {
-        return this.model.find(pattern).sort(sort || this.sort).exec();
+        return this.model.find(pattern).sort(sort || this.sort).exec().then(res => [null,res]).catch(err => [err])
     }
 
     /**
@@ -220,7 +220,7 @@ class Item {
      * @memberof Item
      */
     gets(...ids) {
-        return this.model.find().where('id').in(ids).sort(this.sort).exec();
+        return this.model.find().where('id').in(ids).sort(this.sort).exec().then(res => [null,res]).catch(err => [err])
     }
 
     /**
@@ -240,7 +240,7 @@ class Item {
                 throw new Error(`you can not change id`)
             }
             return this.get(id).then(data => data.update(item))
-        })
+        }).then(res => [null,res]).catch(err => [err])
     }
 
     /**
@@ -267,7 +267,7 @@ class Item {
      * @memberof Item
      */
     emply() {
-        return this.model.db.dropCollection(this.model.collection.collectionName)
+        return this.model.db.dropCollection(this.model.collection.collectionName).then(res => [null,res]).catch(err => [err])
     }
 
     /**
@@ -297,7 +297,7 @@ class Item {
      */
     async setId(item) {
         let id = await this.getLastId()
-        item.id = +id + 1;
+        item.id = +id + 1
     }
 
 }

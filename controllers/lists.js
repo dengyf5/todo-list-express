@@ -9,10 +9,7 @@ class List {
         this.add = this.add.bind(this)
     }
     
-    add(data) {
-        const item = new Item(data,Todo)
-        item.save()
-    }
+   
 }
 
 export default new List()

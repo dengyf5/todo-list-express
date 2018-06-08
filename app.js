@@ -18,4 +18,4 @@ let item = new Item(Todo,data);
 
 //item.add().then(()=>console.log(`add success`)).catch(err => console.log(`${err}`))
 
-//item.deleteByPattern({tag:'life'}).then(() => console.log(`delete success!`)).catch(err => console.log(`${err}`));
+item.deleteByPattern({tag:'work'}).then((x) => console.log(x)).catch(err => console.log(`${err}`));
