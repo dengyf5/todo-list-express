@@ -1,3 +1,5 @@
+import { config } from "../config";
+
 /**
  * return a document object 
  * with some method like save...
@@ -263,8 +265,8 @@ class Item {
             id: -1
         }).exec().then(datalist => {
             if (datalist.length === 0) {
-                // begin with 1000
-                return 999
+                // id begin with (user custom)
+                return config.db.idBeginWith
             }
             //console.log(datalist[0].id)
             return datalist[0].id

@@ -1,7 +1,7 @@
 import mongoose from 'mongoose'
 import config from '../config'
 
-mongoose.connect(config.uri)
+mongoose.connect(config.db.uri)
 
 const db = mongoose.connection
 
